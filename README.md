@@ -1,2 +1,1 @@
-# codewars
-lksj
+# code solutions
