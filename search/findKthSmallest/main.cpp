@@ -40,6 +40,9 @@ int main() {
    for (int i=0; i<inputArray.size(); i++) {
       cout << i << " : " << inputArray[i] << endl;
    }
+   for (auto item : inputArray) {
+      cout << item << endl;
+   }
    cout << findKthSmallest(inputArray, 1) << endl;
    cout << findKthSmallest(inputArray, 2) << endl;
    cout << findKthSmallest(inputArray, 3) << endl;
