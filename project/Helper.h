@@ -30,7 +30,7 @@ public:
 
    T& operator[](const size_t index);
    const T& operator[](const size_t index) const;
-   vector<T> getFeautureVector() const;
+   vector<T> getDimensionVector() const;
    size_t getSize() const;
    size_t getIndex() const;
    T distance(const Point<T>& other) const;
@@ -56,7 +56,7 @@ const T& Point<T>::operator[](const size_t index) const{
 }
 
 template <typename T>
-vector<T> Point<T>::getFeautureVector() const{
+vector<T> Point<T>::getDimensionVector() const{
    return dimension;
 }
 
@@ -80,7 +80,7 @@ void Point<T>::showPoint() const{
 template<typename T>
 T Point<T>::distance(const Point<T>& other) const{
    vector<T> pt1Feature = dimension;
-   vector<T> pt2Feature = other.getFeautureVector();
+   vector<T> pt2Feature = other.getDimensionVector();
    /*transform(begin(pt1Feature), end(pt1Feature), begin(pt2Feature), begin(pt1Feature), []
       (vector<T>::iterator v1, vector<T>::iterator v2) {
       return (v1 - v2) * (v1 - v2);
