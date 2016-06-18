@@ -28,7 +28,7 @@ private:
    shared_ptr<Node<T> > left;
    shared_ptr<Node<T> > right;
    T split_point;
-   int dimension;
+   int split_dimension;
 
 public: 
    TreeNode() = default;
@@ -36,8 +36,43 @@ public:
  
    TreeNode(vector<Point<T>>& points, int cur_depth) {
       if (points.size() > 1) {
-         int split_dimension = getSplit(points);
+         split_dimension = getSplit(points);
          cout << split_dimension << endl;
+         int cur_split = split_dimension;
+         nth_element(begin(points), begin(points) + points.size() / 2, end(points),
+                        [cur_split](const auto& left, const auto& right) {
+                        return left[cur_split] < right[cur_split];
+                        });
+         //use median point as split point
+         auto split_pt = points[points.size() / 2];
+         split_point = split_pt[split_dimension];
+
+         //auto left = vector<Point<T>>(begin(points), begin(points) + points.size() / 2);
+         //auto right = vector<Point<T>>(begin(points) + points.size() / 2, end(points));
+         int num_left = points.size()/2;
+         int num_right = points.end() - points.begin() - points.size()/2;
+         // split if size if greater than 1.
+         if (num_left > 1) {
+            vector<Point<T> > left_points = {points.begin(), points.begin() + points.size()/2};
+            left = make_shared<TreeNode<T>>(left_points, 0);
+            //left = make_shared<TreeNode<T>>(vector<Point<T>>(begin(points), begin(points) + points.size() / 2), 0);
+         }
+         else {//only 1 point create a leaf node to store the point
+            //left_ = make_shared<Point_Node<T>>(left[0]); // FIXME
+         }
+        
+         // split if num_right is greater than one
+         if (num_right > 1){
+             vector<Point<T> > right_points = {points.begin()+points.size()/2, points.end()};
+             right = make_shared<TreeNode<T>>(right_points, 0);            
+             //right = make_shared<TreeNode<T>>(vector<Point<T>>(begin(points) + points.size() / 2, end(points)), 0);            
+         }
+         else {
+             //right = make_shared<TreeNode<T>>(right[0]); // FIXME
+         }
+               /* 
+                */
+
       }
    }
 
