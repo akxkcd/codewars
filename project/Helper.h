@@ -1,5 +1,5 @@
-#ifndef _Point_H_
-#define _Point_H_
+#ifndef _HELPER_H_
+#define _HELPER_H_
 #include <vector>
 #include <initializer_list>   
 #include <algorithm>
@@ -113,7 +113,7 @@ public:
                
             }
             points.emplace_back(in_points, count++);
-            points[count-1].showPoint();
+            //points[count-1].showPoint();
             in_points.clear();
          } 
       }
@@ -121,6 +121,8 @@ public:
    }
 };
 
+/*
+// FIXME: cleanup
 template <typename T = float>
 class Input_Interpreter{
    Input_Interpreter() = default;
@@ -161,6 +163,6 @@ void Input_Interpreter<T>::writeToCSV(const string & fname, const vector<pair<in
       output_csv << pt.first << "," << pt.second << "\n";
    }
 }
-
+*/
 
 #endif
