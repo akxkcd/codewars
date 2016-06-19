@@ -1,6 +1,6 @@
 CC = g++
 DEBUG = -g
-CFLAGS = -Wall -std=c++14 -c $(DEBUG) -I.
+CFLAGS = -Wall -std=c++14 -c $(DEBUG) -I. -lm
 LFLAGS = -Wall -std=c++14 $(DEBUG)
 OBJ = Helper.o Node.o KDTree.o 
 all: compile run

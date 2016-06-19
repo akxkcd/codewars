@@ -10,13 +10,14 @@
 #include <ios>
 #include <utility>
 #include <iostream>
+#include <math.h>
 
 using namespace std;
 
 template <typename T = float>
 class Point{
    vector<T> dimension;
-   int index_;
+   int point_index;
 public:
    //default constructor
    Point() = default;
@@ -33,7 +34,7 @@ public:
    vector<T> getDimensionVector() const;
    size_t getSize() const;
    size_t getIndex() const;
-   T distance(const Point<T>& other) const;
+   T getDistance(const Point<T>& neighbor) const;
    void showPoint() const;
 };
 
@@ -42,7 +43,7 @@ Point<T>::Point(const initializer_list<T>& input_list): dimension(input_list){
 }
 
 template <typename T>
-Point<T>::Point(const vector<T>& input_vec, int index):dimension(input_vec), index_(index){
+Point<T>::Point(const vector<T>& input_vec, int index):dimension(input_vec), point_index(index){
 }
 
 template <typename T>
@@ -67,7 +68,7 @@ size_t Point<T>::getSize() const{
 
 template<typename T>
 size_t Point<T>::getIndex() const{
-   return index_;
+   return point_index;
 }
 
 template<typename T>
@@ -78,16 +79,19 @@ void Point<T>::showPoint() const{
 }
 
 template<typename T>
-T Point<T>::distance(const Point<T>& other) const{
-   vector<T> pt1Feature = dimension;
-   vector<T> pt2Feature = other.getDimensionVector();
+T Point<T>::getDistance(const Point<T>& neighbor) const{
+   vector<T> neighbor_dimension = neighbor.getDimensionVector();
+   T cur_distance = 0;
+   for(int i=0; i<dimension.size(); i++) {
+      cur_distance += (dimension[i]-neighbor_dimension[i])*(dimension[i]-neighbor_dimension[i]);
+   }
    /*transform(begin(pt1Feature), end(pt1Feature), begin(pt2Feature), begin(pt1Feature), []
       (vector<T>::iterator v1, vector<T>::iterator v2) {
       return (v1 - v2) * (v1 - v2);
    });*/
 
-   T dist = sqrtf(accumulate(begin(pt1Feature), end(pt1Feature), 0.0));
-   return dist;
+   cur_distance = sqrtf(cur_distance);
+   return cur_distance;
 }
 
 template <typename T = float>

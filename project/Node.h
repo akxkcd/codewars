@@ -19,7 +19,7 @@ public:
    {
       return nullptr;
    }
-   virtual bool findNearestNeighbor(Point<T> &input_point, T& nearest_distance, int& nearest_neighbor);
+   virtual bool findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor);
 };
 
 template<typename T=float>
@@ -34,7 +34,7 @@ public:
    LeafNode(const Point<T> &cur_point): point(cur_point) {};
    // Destructor
    ~LeafNode() = default;
-   virtual bool findNearestNeighbor(Point<T> &input_point, T& nearest_distance, int& nearest_neighbor);
+   virtual bool findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor);
     
 };
 
@@ -95,13 +95,24 @@ public:
    bool searchNode(const Point<T>& searchPoint) const;
    
    int getSplit(vector<Point<T> >& points);
-   bool findNearestNeighbor(Point<T> &input_point, T& nearest_distance, int& nearest_neighbor);
+   bool findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor);
 };
 
 template<typename T>
-bool TreeNode<T>::findNearestNeighbor(Point<T> &input_point, T& nearest_distance, int& nearest_neighbor) {
+bool TreeNode<T>::findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor) {
    bool found = false;
-
+   shared_ptr<Node<T> > ignored_branch;
+   cout << "searching around " << split_point << endl; 
+   if (input_point[split_dimension] < split_point) {
+      ignored_branch = right;
+      left->findNearestNeighbor(input_point, nearest_distance, nearest_neighbor);
+   } else {
+      ignored_branch = left;
+      right->findNearestNeighbor(input_point, nearest_distance, nearest_neighbor);
+   }
+   if (fabs(input_point[split_dimension] - split_point) < nearest_distance) {
+      ignored_branch->findNearestNeighbor(input_point, nearest_distance, nearest_neighbor); 
+   }
    return found;
 }
 /*
@@ -159,14 +170,18 @@ int TreeNode<T>::getSplit(vector<Point<T> >& points) {
 }
 
 template<typename T>
-bool LeafNode<T>::findNearestNeighbor(Point<T> &input_point, T& nearest_distance, int& nearest_neighbor) {
+bool LeafNode<T>::findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor) {
    bool found = false;
-
+   T LeafDistance = point.getDistance(input_point);
+   if (LeafDistance < nearest_distance) {
+      nearest_distance = LeafDistance;
+      nearest_neighbor = point.getIndex(); 
+   }
    return found;
 }
 
 template<typename T>
-bool Node<T>::findNearestNeighbor(Point<T> &input_point, T& nearest_distance, int& nearest_neighbor) {
+bool Node<T>::findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor) {
    return false;
 }
 

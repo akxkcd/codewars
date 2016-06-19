@@ -23,6 +23,7 @@ int main(int argc, char *argv[]) {
    } else {
       query_points = IO_Points<float>::readCSV("data/query_data.csv");
    } 
-    
+   kdtree.query_kdtree(query_points[0]);  
+   kdtree.query_kdtree(query_points);  
    return 0;
 }
