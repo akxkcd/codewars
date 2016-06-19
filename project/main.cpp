@@ -1,4 +1,5 @@
 #include "Helper.h"
+#include "Tester.h"
 #include "KDTree.h"
 #include <utility> 
 using namespace std;
@@ -23,7 +24,12 @@ int main(int argc, char *argv[]) {
    } else {
       query_points = IO_Points<float>::readCSV("data/query_data.csv");
    } 
-   kdtree.query_kdtree(query_points[0]);  
-   kdtree.query_kdtree(query_points);  
+   //kdtree.query_kdtree(query_points[0]);  
+   kdtree.query_kdtree(query_points); 
+   Tester<float>::test_kdtree(kdtree, points, query_points);
+   points.clear();
+   query_points.clear(); 
    return 0;
 }
+
+

@@ -22,6 +22,7 @@ public:
    static KDTree make_kdtree(vector<Point<T> > &points);
    int query_kdtree(Point<T> &cur_point);
    int query_kdtree(vector<Point<T> >  &cur_points);
+   int query_kdtree(Point<T> &cur_point, T& nearest_distance, int &nearest_neighbor);
 //   void build_kdtree(vector<Point<T> > &points);
 /* {
       return ;
@@ -47,8 +48,15 @@ template<typename T>
 int KDTree<T>::query_kdtree(Point<T> &cur_point) {
    T nearest_distance = numeric_limits<T>::max();
    int nearest_neighbor;
-   root->findNearestNeighbor(cur_point, nearest_distance, nearest_neighbor);
+   query_kdtree(cur_point, nearest_distance, nearest_neighbor);
    cout << nearest_neighbor << " " << nearest_distance << endl;
+}
+
+template<typename T>
+int KDTree<T>::query_kdtree(Point<T> &cur_point, T& nearest_distance, int &nearest_neighbor) {
+   nearest_distance = numeric_limits<T>::max();
+   root->findNearestNeighbor(cur_point, nearest_distance, nearest_neighbor);
+   //cout << nearest_neighbor << " " << nearest_distance << endl;
 }
 
 template<typename T>

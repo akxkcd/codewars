@@ -102,7 +102,7 @@ template<typename T>
 bool TreeNode<T>::findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor) {
    bool found = false;
    shared_ptr<Node<T> > ignored_branch;
-   cout << "searching around " << split_point << endl; 
+   //cout << "searching around " << split_point << endl; 
    if (input_point[split_dimension] < split_point) {
       ignored_branch = right;
       left->findNearestNeighbor(input_point, nearest_distance, nearest_neighbor);

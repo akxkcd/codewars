@@ -11,7 +11,10 @@ point.o:
 #Helper.o: 
 #	$(CC) -c -o $@ Helper.h $(CFLAGS)
 
-%.o: %.cpp
+#%.o: %.cpp
+#	$(CC) -c -o $@ $< $(CFLAGS)
+
+%.o: %.h
 	$(CC) -c -o $@ $< $(CFLAGS)
  
 compile: $(OBJ)
@@ -19,8 +22,12 @@ compile: $(OBJ)
 
 run: 
 	./a.out
+
 run1:
-	./a.out data/sample_data_orig.csv
+	./a.out data/sample_data_orig.csv data/query_data.csv
+
+valgrind:
+	valgrind --leak-check=yes ./a.out data/sample_data_orig.csv data/query_data.csv 
 clear:
 	rm *.o
 
