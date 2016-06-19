@@ -20,9 +20,9 @@ public:
    static void query_kdtree(const string& inputFileName, const string& outputFileName);
    static KDTree build_kdtree(vector<Point<T> > &points);
    static KDTree make_kdtree(vector<Point<T> > &points);
-   int query_kdtree(Point<T> &cur_point);
-   int query_kdtree(vector<Point<T> >  &cur_points);
-   int query_kdtree(Point<T> &cur_point, T& nearest_distance, int &nearest_neighbor);
+   void query_kdtree(Point<T> &cur_point);
+   void query_kdtree(vector<Point<T> >  &cur_points);
+   void query_kdtree(Point<T> &cur_point, T& nearest_distance, int &nearest_neighbor);
 //   void build_kdtree(vector<Point<T> > &points);
 /* {
       return ;
@@ -45,32 +45,25 @@ KDTree<T> KDTree<T>::make_kdtree(vector<Point<T> > &points)
 }
 
 template<typename T>
-int KDTree<T>::query_kdtree(Point<T> &cur_point) {
+void KDTree<T>::query_kdtree(Point<T> &cur_point) {
    T nearest_distance = numeric_limits<T>::max();
    int nearest_neighbor;
    query_kdtree(cur_point, nearest_distance, nearest_neighbor);
-   cout << nearest_neighbor << " " << nearest_distance << endl;
+   //cout << nearest_neighbor << " " << nearest_distance << endl;
 }
 
 template<typename T>
-int KDTree<T>::query_kdtree(Point<T> &cur_point, T& nearest_distance, int &nearest_neighbor) {
+void KDTree<T>::query_kdtree(Point<T> &cur_point, T& nearest_distance, int &nearest_neighbor) {
    nearest_distance = numeric_limits<T>::max();
    root->findNearestNeighbor(cur_point, nearest_distance, nearest_neighbor);
    //cout << nearest_neighbor << " " << nearest_distance << endl;
 }
 
 template<typename T>
-int KDTree<T>::query_kdtree(vector<Point<T> >  &cur_points) {
+void KDTree<T>::query_kdtree(vector<Point<T> >  &cur_points) {
    for(int i=0; i<cur_points.size(); i++) {
       query_kdtree(cur_points[i]);
    }
 }
 
-/*
-template<typename T>
-bool KDTree<T>::findNearestNeighbor(Point<T> &cur_point, T& nearest_distance, int& nearest_neighbor) {
-   bool found = false;
-   
-}
-*/
 #endif

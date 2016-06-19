@@ -54,7 +54,7 @@ public:
    TreeNode(vector<Point<T>>& points, int cur_depth) {
       if (points.size() > 1) {
          split_dimension = getSplit(points);
-         cout << split_dimension << endl;
+         //cout << split_dimension << endl;
          int cur_split = split_dimension;
          nth_element(begin(points), begin(points) + points.size() / 2, end(points),
                         [cur_split](const auto& left, const auto& right) {
@@ -144,29 +144,9 @@ int TreeNode<T>::getSplit(vector<Point<T> >& points) {
          maxDiff = (maxElement-minElement);
          splitIndex = i;
       }
-      cout << maxElement << " " << minElement << endl;
+      //cout << maxElement << " " << minElement << endl;
    }
    return splitIndex;
-/*
-//FIXME: cleanup 
-   if (list_points.size() > 1) {
-                //get number of dimensions -- assumes all the features has same dimensions
-                int N = list_points[0].getFeautureVector().size();
-                double currentMax = std::numeric_limits<T>::min();
-                for (int i = 0; i < N; ++i) {
-                        auto min_max_result = std::minmax_element(begin(list_points), end(list_points),
-                                [i](const auto& left, const auto& right) {
-                                return left[i] < right[i];  }
-                        );
-                        if (currentMax < (*min_max_result.second)[i] - (*min_max_result.first)[i]) {
-                                currentMax = (*min_max_result.second)[i] - (*min_max_result.first)[i];
-                                split_dimension_ = i;
-                        }
-                }
-        }
-        return split_dimension_;
-*/
-   return true;   
 }
 
 template<typename T>

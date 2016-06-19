@@ -1,9 +1,8 @@
 #include "Helper.h"
 #include "Tester.h"
 #include "KDTree.h"
-#include <utility> 
+//#include <utility> 
 using namespace std;
-///using std::pair;
 
 int main(int argc, char *argv[]) {
 	

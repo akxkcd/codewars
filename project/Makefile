@@ -1,7 +1,8 @@
 CC = g++
+COV = -fprofile-arcs -ftest-coverage
 DEBUG = -g
-CFLAGS = -Wall -std=c++14 -c $(DEBUG) -I. -lm
-LFLAGS = -Wall -std=c++14 $(DEBUG)
+CFLAGS = -Wall -std=c++14 -c $(DEBUG) $(COV) -I. -lm
+LFLAGS = -Wall -std=c++14 $(DEBUG) $(COV)
 OBJ = Helper.o Node.o KDTree.o 
 all: compile run
 
@@ -32,4 +33,4 @@ clear:
 	rm *.o
 
 clean:
-	rm *.o
+	rm *.o *.gcov *.gcno *.gcda
