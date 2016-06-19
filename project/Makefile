@@ -19,7 +19,8 @@ compile: $(OBJ)
 
 run: 
 	./a.out
-
+run1:
+	./a.out data/sample_data_orig.csv
 clear:
 	rm *.o
 

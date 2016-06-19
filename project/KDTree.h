@@ -20,6 +20,7 @@ public:
    static void query_kdtree(const string& inputFileName, const string& outputFileName);
    static KDTree build_kdtree(vector<Point<T> > &points);
    static KDTree make_kdtree(vector<Point<T> > &points);
+   int query_kdtree(Point<T> &cur_point);
 //   void build_kdtree(vector<Point<T> > &points);
 /* {
       return ;
@@ -41,4 +42,18 @@ KDTree<T> KDTree<T>::make_kdtree(vector<Point<T> > &points)
    }
 }
 
+template<typename T>
+int KDTree<T>::query_kdtree(Point<T> &cur_point) {
+   T nearest_distance;
+   int nearest_neighbor;
+   root->findNearestNeighbor(cur_point, nearest_distance, nearest_neighbor);
+}
+
+/*
+template<typename T>
+bool KDTree<T>::findNearestNeighbor(Point<T> &cur_point, T& nearest_distance, int& nearest_neighbor) {
+   bool found = false;
+   
+}
+*/
 #endif
