@@ -61,11 +61,15 @@ class TreeNode : public Node<T>
 private:
    shared_ptr<Node<T> > left;
    shared_ptr<Node<T> > right;
-   T split_point;
    int split_dimension;
+   T split_point;
 
 public: 
    TreeNode() = default;
+   TreeNode(int split_dim, T split_pt): split_dimension(split_dim), split_point(split_pt) {}
+   TreeNode(vector<Point<T>>& points, int cur_depth/*, int build_method*/);
+   TreeNode(vector<Point<T>>& points, int cur_depth, int build_method);
+
    //TreeNode(vector<Point<T>>& points, int cur_depth);
    virtual shared_ptr<Node<T> > getLeft() {
       return left;
@@ -79,46 +83,6 @@ public:
    virtual int get_split_dimension() const {
       return split_dimension;
    }
-   TreeNode(vector<Point<T>>& points, int cur_depth) {
-      if (points.size() > 1) {
-         split_dimension = getSplit(points);
-         //cout << split_dimension << endl;
-         int cur_split = split_dimension;
-         nth_element(begin(points), begin(points) + points.size() / 2, end(points),
-                        [cur_split](const auto& left, const auto& right) {
-                        return left[cur_split] < right[cur_split];
-                        });
-         //use median point as split point
-         auto split_pt = points[points.size() / 2];
-         split_point = split_pt[split_dimension];
-
-         //auto left = vector<Point<T>>(begin(points), begin(points) + points.size() / 2);
-         //auto right = vector<Point<T>>(begin(points) + points.size() / 2, end(points));
-         vector<Point<T> > left_points = {points.begin(), points.begin() + points.size()/2};
-         vector<Point<T> > right_points = {points.begin()+points.size()/2, points.end()};
-         int num_left = points.size()/2;
-         int num_right = points.end() - points.begin() - points.size()/2;
-         // split if size if greater than 1.
-         if (num_left > 1) {
-            left = make_shared<TreeNode<T>>(left_points, 0/*FIXME: */);
-         }
-         else {//only 1 point create a leaf node to store the point
-            left = make_shared<LeafNode<T>>(left_points[0]); // FIXME
-         }
-        
-         // split if num_right is greater than one
-         if (num_right > 1){
-             right = make_shared<TreeNode<T>>(right_points, 0/*FIXME*/);            
-         }
-         else {
-             right = make_shared<LeafNode<T>>(right_points[0]); // FIXME
-         }
-               /* 
-                */
-
-      }
-   }
-
    ~TreeNode() = default;
    
    bool searchNode(const Point<T>& searchPoint) const;
@@ -131,6 +95,85 @@ public:
    int getSplit(vector<Point<T> >& points);
    bool findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor);
 };
+
+template <typename T>
+TreeNode<T>::TreeNode(vector<Point<T>>& points, int cur_depth, int build_method) {
+   if (points.size() > 1) {
+      //if (build_method == 1) split_dimension = 1;
+      split_dimension = getSplit(points);
+ //cout << split_dimension << endl;
+      int cur_split = split_dimension;
+      nth_element(begin(points), begin(points) + points.size() / 2, end(points),
+		[cur_split](const Point<T>& left, const Point<T>& right) {
+		return left[cur_split] < right[cur_split];
+		});
+ //use median point as split point
+      auto split_pt = points[points.size() / 2];
+      split_point = split_pt[split_dimension];
+
+ //auto left = vector<Point<T>>(begin(points), begin(points) + points.size() / 2);
+ //auto right = vector<Point<T>>(begin(points) + points.size() / 2, end(points));
+      vector<Point<T> > left_points = {points.begin(), points.begin() + points.size()/2};
+      vector<Point<T> > right_points = {points.begin()+points.size()/2, points.end()};
+      int num_left = points.size()/2;
+      int num_right = points.end() - points.begin() - points.size()/2;
+ // split if size if greater than 1.
+      if (num_left > 1) {
+         left = make_shared<TreeNode<T>>(left_points, 0/*FIXME: */);
+      }
+      else {//only 1 point create a leaf node to store the point
+         left = make_shared<LeafNode<T>>(left_points[0]); // FIXME
+      }
+
+ // split if num_right is greater than one
+      if (num_right > 1){
+         right = make_shared<TreeNode<T>>(right_points, 0/*FIXME*/);            
+      }
+      else {
+         right = make_shared<LeafNode<T>>(right_points[0]); // FIXME
+      }
+   }
+   
+}
+
+template <typename T>
+TreeNode<T>::TreeNode(vector<Point<T>>& points, int cur_depth/*, int build_method*/) {
+   if (points.size() > 1) {
+      //if (build_method == 1) split_dimension = 1;
+      split_dimension = getSplit(points);
+ //cout << split_dimension << endl;
+      int cur_split = split_dimension;
+      nth_element(begin(points), begin(points) + points.size() / 2, end(points),
+		[cur_split](const Point<T>& left, const Point<T>& right) {
+		return left[cur_split] < right[cur_split];
+		});
+ //use median point as split point
+      auto split_pt = points[points.size() / 2];
+      split_point = split_pt[split_dimension];
+
+ //auto left = vector<Point<T>>(begin(points), begin(points) + points.size() / 2);
+ //auto right = vector<Point<T>>(begin(points) + points.size() / 2, end(points));
+      vector<Point<T> > left_points = {points.begin(), points.begin() + points.size()/2};
+      vector<Point<T> > right_points = {points.begin()+points.size()/2, points.end()};
+      int num_left = points.size()/2;
+      int num_right = points.end() - points.begin() - points.size()/2;
+ // split if size if greater than 1.
+      if (num_left > 1) {
+         left = make_shared<TreeNode<T>>(left_points, 0/*FIXME: */);
+      }
+      else {//only 1 point create a leaf node to store the point
+         left = make_shared<LeafNode<T>>(left_points[0]); // FIXME
+      }
+
+ // split if num_right is greater than one
+      if (num_right > 1){
+         right = make_shared<TreeNode<T>>(right_points, 0/*FIXME*/);            
+      }
+      else {
+         right = make_shared<LeafNode<T>>(right_points[0]); // FIXME
+      }
+   }
+}
 
 template<typename T>
 bool TreeNode<T>::findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor) {

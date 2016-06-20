@@ -2,6 +2,7 @@
 #define __KDTREE_H__
 #include <memory>
 #include <fstream>
+#include <sstream>
 #include "Node.h"
 #include <deque>
 
@@ -19,9 +20,9 @@ public:
    ~KDTree() = default; 
 
    static void build_kdtree(const string& inputFileName);
-   static void query_kdtree(const string& inputFileName, const string& outputFileName);
    static KDTree build_kdtree(vector<Point<T> > &points);
    static KDTree make_kdtree(vector<Point<T> > &points);
+   static void query_kdtree(const string& inputFileName, const string& outputFileName);
    void query_kdtree(Point<T> &cur_point);
    void query_kdtree(vector<Point<T> >  &cur_points);
    void query_kdtree(Point<T> &cur_point, T& nearest_distance, int &nearest_neighbor);
@@ -44,7 +45,8 @@ KDTree<T> KDTree<T>::make_kdtree(vector<Point<T> > &points)
    } else {
       //TreeNode<T> cur_node(points,0);
       //return KDTree(cur_node);
-      return KDTree(make_shared<TreeNode<T> >(points,0));
+      //return KDTree(make_shared<TreeNode<T> >(points,0));
+      return KDTree(make_shared<TreeNode<T> >(points,0,0));
    }
 }
 
@@ -71,6 +73,40 @@ void KDTree<T>::query_kdtree(vector<Point<T> >  &cur_points) {
 }
 
 template<typename T>
+void KDTree<T>::read_kdtree(const string& inputFileName) {
+   ifstream in_file(inputFileName);
+   if (!in_file.good()) {
+      cout << "could not open file in read_kdtree " << inputFileName << endl;
+      throw "file could not open";
+   }
+   string cur_line;
+   bool start = false;
+   deque<shared_ptr<Node<T> > > tree_elements;
+   while(!in_file.eof()) {
+      getline(in_file, cur_line);
+      if (cur_line.empty())
+         continue;
+      istringstream istream(cur_line);
+      string nodeType;
+      getline(istream, nodeType, ':');
+      if(nodeType == "2") {
+         if (start == false) {
+           start = true;
+           string split_dim;
+           string split_point;
+	   getline(istream, split_dim, ',');
+	   getline(istream, split_point, ',');
+           cout << "reading and populating kdtree";
+           T split_pt = stof(split_point);
+           TreeNode<T>  cur_node(stoi(split_dim), split_pt);
+           root = make_shared<TreeNode<T> >(cur_node); 
+           tree_elements.push_back(root);
+         }
+      }
+   }
+}
+
+template<typename T>
 void KDTree<T>::save_kdtree(const string& outputFileName) {
    
    ofstream out_file(outputFileName);
@@ -79,7 +115,6 @@ void KDTree<T>::save_kdtree(const string& outputFileName) {
       throw "file could not open";
    }
    // Traverse the tree BFS and store it in file. 
-   // FIXME:
    typedef decltype (root) root_type;
    deque<shared_ptr<Node<T> > > tree_elements;
    tree_elements.push_back(root);
@@ -93,14 +128,17 @@ void KDTree<T>::save_kdtree(const string& outputFileName) {
             tree_elements.push_back(cur_element->getLeft()); 
             tree_elements.push_back(cur_element->getRight());
             cout << "saving TREE Node" << cur_element->getType() << endl;
-            out_file << cur_element->getType() << "," << cur_element->get_split_point() << "," << cur_element->get_split_dimension() << endl; 
+            out_file << cur_element->getType() << ":" << cur_element->get_split_dimension() << "," << cur_element->get_split_point() << endl; 
          } else if (cur_element->getType() == LEAF) {
             cout << "saving LEAF Node" << endl;
-            out_file << cur_element->getType() << ",";
-            for (int i=0; i<cur_element->getPoint().getDimensionVector().size(); i++) {
-               out_file << cur_element->getPoint().getDimensionVector()[i] << ",";
+            out_file << cur_element->getType() << ":";
+            int point_size = cur_element->getPoint().getDimensionVector().size();
+            for (int i=0; i<point_size; i++) {
+               if (i==point_size-1)
+                  out_file << cur_element->getPoint().getDimensionVector()[i] << endl;
+               else
+                  out_file << cur_element->getPoint().getDimensionVector()[i] << ",";
             }
-            out_file << endl;
          } else {
             cout << "ERROR: Found incompatible node" << endl;
             throw "incompatible node found";
@@ -110,9 +148,5 @@ void KDTree<T>::save_kdtree(const string& outputFileName) {
    }  
 }
 
-template<typename T>
-void read_kdtree(const string& inputFileName) {
-
-}
 
 #endif
