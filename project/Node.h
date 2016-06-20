@@ -5,6 +5,7 @@
 
 using namespace std;
 
+enum {NODE=0, LEAF=1, TREE=2};
 template<typename T=float>
 class Node : public enable_shared_from_this<Node<T>>
 {
@@ -19,6 +20,15 @@ public:
    {
       return nullptr;
    }
+   virtual int getType() const
+   {
+      return NODE;
+   }
+   virtual shared_ptr<Node<T> > getLeft() {return nullptr;}
+   virtual shared_ptr<Node<T> > getRight() {return nullptr;}
+   virtual T get_split_point() const {return 0;}
+   virtual int get_split_dimension() const {return -1;}
+   virtual Point<T> getPoint() {return Point<T>{};}
    virtual bool findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor);
 };
 
@@ -35,7 +45,14 @@ public:
    // Destructor
    ~LeafNode() = default;
    virtual bool findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor);
-    
+   virtual int getType() const
+   {
+      return LEAF;
+   }
+   virtual Point<T> getPoint()
+   {
+      return point;
+   }
 };
 
 template<typename T=float>
@@ -50,7 +67,18 @@ private:
 public: 
    TreeNode() = default;
    //TreeNode(vector<Point<T>>& points, int cur_depth);
- 
+   virtual shared_ptr<Node<T> > getLeft() {
+      return left;
+   }
+   virtual shared_ptr<Node<T> > getRight() {
+      return right;
+   }
+   virtual T get_split_point() const {
+      return split_point;
+   }
+   virtual int get_split_dimension() const {
+      return split_dimension;
+   }
    TreeNode(vector<Point<T>>& points, int cur_depth) {
       if (points.size() > 1) {
          split_dimension = getSplit(points);
@@ -92,8 +120,14 @@ public:
    }
 
    ~TreeNode() = default;
+   
    bool searchNode(const Point<T>& searchPoint) const;
    
+   virtual int getType() const
+   {
+      return TREE;
+   }
+      
    int getSplit(vector<Point<T> >& points);
    bool findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor);
 };

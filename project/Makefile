@@ -1,5 +1,5 @@
 CC = g++
-COV = -fprofile-arcs -ftest-coverage
+#COV = -fprofile-arcs -ftest-coverage
 DEBUG = -g
 CFLAGS = -Wall -std=c++14 -c $(DEBUG) $(COV) -I. -lm
 LFLAGS = -Wall -std=c++14 $(DEBUG) $(COV)

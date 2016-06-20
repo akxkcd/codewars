@@ -17,7 +17,8 @@ int main(int argc, char *argv[]) {
    }
    //KDTree<float> kdtree;// = new KDTree<float>();
    //kdtree = KDTree<float>::build_kdtree(points);
-   auto kdtree = KDTree<float>::make_kdtree(points);   
+   auto kdtree = KDTree<float>::make_kdtree(points);  
+   kdtree.save_kdtree("testfile.csv"); 
    if (argc > 2) {
       query_points = IO_Points<float>::readCSV(string(argv[2]));
    } else {
