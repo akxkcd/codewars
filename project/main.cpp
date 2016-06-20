@@ -20,7 +20,8 @@ int main(int argc, char *argv[]) {
    auto kdtree = KDTree<float>::make_kdtree(points);  
    kdtree.save_kdtree("savetree.csv"); 
    KDTree<float> saved_kdtree;// = new KDTree<float>;
-   saved_kdtree.read_kdtree("testfile.csv");
+   saved_kdtree.read_kdtree("savetree.csv");
+   saved_kdtree.save_kdtree("newtree.csv");
    if (argc > 2) {
       query_points = IO_Points<float>::readCSV(string(argv[2]));
    } else {

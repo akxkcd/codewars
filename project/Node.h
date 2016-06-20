@@ -25,7 +25,9 @@ public:
       return NODE;
    }
    virtual shared_ptr<Node<T> > getLeft() {return nullptr;}
+   virtual void setLeft(shared_ptr<Node<T> > cur_left) {}
    virtual shared_ptr<Node<T> > getRight() {return nullptr;}
+   virtual void setRight(shared_ptr<Node<T> > cur_right) {}
    virtual T get_split_point() const {return 0;}
    virtual int get_split_dimension() const {return -1;}
    virtual Point<T> getPoint() {return Point<T>{};}
@@ -77,6 +79,8 @@ public:
    virtual shared_ptr<Node<T> > getRight() {
       return right;
    }
+   virtual void setLeft(shared_ptr<Node<T> > cur_left) {left = cur_left;}
+   virtual void setRight(shared_ptr<Node<T> > cur_right) {right = cur_right;}
    virtual T get_split_point() const {
       return split_point;
    }

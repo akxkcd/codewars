@@ -90,18 +90,34 @@ void KDTree<T>::read_kdtree(const string& inputFileName) {
       string nodeType;
       getline(istream, nodeType, ':');
       if(nodeType == "2") {
+         string split_dim;
+         string split_point;
+	 getline(istream, split_dim, ',');
+	 getline(istream, split_point, ',');
+         T split_pt = stof(split_point);
+         TreeNode<T>  cur_node(stoi(split_dim), split_pt);
          if (start == false) {
            start = true;
-           string split_dim;
-           string split_point;
-	   getline(istream, split_dim, ',');
-	   getline(istream, split_point, ',');
            cout << "reading and populating kdtree";
-           T split_pt = stof(split_point);
-           TreeNode<T>  cur_node(stoi(split_dim), split_pt);
            root = make_shared<TreeNode<T> >(cur_node); 
            tree_elements.push_back(root);
+         } else {
+           shared_ptr<Node<T> > cur_element;
+           cur_element = tree_elements.front();
+           if (cur_element == nullptr) {
+              cout << "Error: could not find last element" << endl;
+           }
+           if (cur_element->getLeft() == nullptr) {
+              cur_element->setLeft(make_shared<TreeNode<T> > (cur_node));
+              tree_elements.push_back(cur_element->getLeft()); 
+           } else {
+              cur_element->setRight(make_shared<TreeNode<T> > (cur_node));
+              tree_elements.push_back(cur_element->getRight()); 
+              tree_elements.pop_front();
+           } 
          }
+      } else if (nodeType == "1") {
+
       }
    }
 }
