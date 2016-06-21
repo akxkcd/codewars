@@ -3,7 +3,9 @@
 #include "KDTree.h"
 //#include <utility> 
 using namespace std;
-
+// NOTE: This file is used to test all APIs
+// build_kdtree.cpp and query_kdtree.cpp are the main functions
+// which meet the requirements of this homework. 
 int main(int argc, char *argv[]) {
 	
    vector<Point<float> > points;
@@ -15,8 +17,6 @@ int main(int argc, char *argv[]) {
    }else { 
       points = IO_Points<float>::readCSV("data/sample_data.csv");
    }
-   //KDTree<float> kdtree;// = new KDTree<float>();
-   //kdtree = KDTree<float>::build_kdtree(points);
    auto kdtree = KDTree<float>::make_kdtree(points);  
    kdtree.save_kdtree("savetree.csv"); 
    KDTree<float> saved_kdtree;// = new KDTree<float>;

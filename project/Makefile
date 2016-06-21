@@ -1,30 +1,24 @@
 CC = g++
 #COV = -fprofile-arcs -ftest-coverage
 DEBUG = -g
-CFLAGS = -Wall -std=c++11 -c $(DEBUG) $(COV) -I. -lm
-LFLAGS = -Wall -std=c++11 $(DEBUG) $(COV)
+CFLAGS = -Wall  -std=c++11 -c $(DEBUG) -I. -lm
+LFLAGS = -Wall -std=c++11 $(DEBUG) 
 OBJ = Helper.o Node.o KDTree.o 
 all: compile run
 
 point.o:
 	$(CC) $(CFLAGS) -c Helper.h
 
-#Helper.o: 
-#	$(CC) -c -o $@ Helper.h $(CFLAGS)
-
-#%.o: %.cpp
-#	$(CC) -c -o $@ $< $(CFLAGS)
-
 %.o: %.h
 	$(CC) -c -o $@ $< $(CFLAGS)
  
-compile: $(OBJ)
+compile: 
 	$(CC) $(LFLAGS) $^  main.cpp
 
-build_kdtree: $(OBJ)
+build_kdtree: 
 	$(CC) $(LFLAGS) $^  build_kdtree.cpp -o build_kdtree
 
-query_kdtree: $(OBJ)
+query_kdtree: 
 	$(CC) $(LFLAGS) $^  query_kdtree.cpp -o query_kdtree
 
 run: 

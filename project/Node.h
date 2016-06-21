@@ -4,8 +4,11 @@
 #include "Helper.h"
 
 using namespace std;
-
+// enum to define different classes. 
 enum {NODE=0, LEAF=1, TREE=2};
+
+// Base class container for each node of the tree. 
+// Derived class LeafNode and TreeNode are used to create tree. 
 template<typename T=float>
 class Node : public enable_shared_from_this<Node<T>>
 {
@@ -35,6 +38,8 @@ public:
    virtual bool findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor);
 };
 
+// Class to contains leafs of the tree.
+// It contains point object to recognize the location of this leaf. 
 template<typename T=float>
 class LeafNode : public Node<T>
 {
@@ -59,55 +64,56 @@ public:
    }
 };
 
+// Class contains non-leaf nodes of the tree. 
+// It contains left, right pointers, and split_point/dimension information
 template<typename T=float>
 class TreeNode : public Node<T>
 {
 private:
    shared_ptr<Node<T> > left;
    shared_ptr<Node<T> > right;
-   int split_dimension;
-   T split_point;
+   int split_dimension; // Dimension (hyperplane) along which the cut is made. 
+   T split_point; // point around which this node divides. 
 
 public: 
+   // Constructors
    TreeNode() = default;
    TreeNode(int split_dim, T split_pt): split_dimension(split_dim), split_point(split_pt) {}
-   TreeNode(vector<Point<T>>& points, int cur_depth/*, int build_method*/);
+   // On passing the points, these constructors create the tree recursively
+   TreeNode(vector<Point<T>>& points, int cur_depth);
    TreeNode(vector<Point<T>>& points, int cur_depth, int build_method);
+   
+   // Default destructor
+   ~TreeNode() = default;
 
-   //TreeNode(vector<Point<T>>& points, int cur_depth);
+   virtual void setLeft(shared_ptr<Node<T> > cur_left) {left = cur_left;}
+   virtual void setRight(shared_ptr<Node<T> > cur_right) {right = cur_right;}
+   bool searchNode(const Point<T>& searchPoint) const;
+   int getSplit(vector<Point<T> >& points);
+   bool findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor);
    virtual shared_ptr<Node<T> > getLeft() {
       return left;
    }
    virtual shared_ptr<Node<T> > getRight() {
       return right;
    }
-   virtual void setLeft(shared_ptr<Node<T> > cur_left) {left = cur_left;}
-   virtual void setRight(shared_ptr<Node<T> > cur_right) {right = cur_right;}
    virtual T get_split_point() const {
       return split_point;
    }
    virtual int get_split_dimension() const {
       return split_dimension;
    }
-   ~TreeNode() = default;
-   
-   bool searchNode(const Point<T>& searchPoint) const;
-   
    virtual int getType() const
    {
       return TREE;
    }
-      
-   int getSplit(vector<Point<T> >& points);
-   bool findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor);
 };
 
+// constructor to build the tree. 
 template <typename T>
 TreeNode<T>::TreeNode(vector<Point<T>>& points, int cur_depth, int build_method) {
    if (points.size() > 1) {
-      //if (build_method == 1) split_dimension = 1;
       split_dimension = getSplit(points);
- //cout << split_dimension << endl;
       int cur_split = split_dimension;
       nth_element(begin(points), begin(points) + points.size() / 2, end(points),
 		[cur_split](const Point<T>& left, const Point<T>& right) {
@@ -117,17 +123,14 @@ TreeNode<T>::TreeNode(vector<Point<T>>& points, int cur_depth, int build_method)
       auto split_pt = points[points.size() / 2];
       split_point = split_pt[split_dimension];
 
- //auto left = vector<Point<T>>(begin(points), begin(points) + points.size() / 2);
- //auto right = vector<Point<T>>(begin(points) + points.size() / 2, end(points));
       vector<Point<T> > left_points = {points.begin(), points.begin() + points.size()/2};
       vector<Point<T> > right_points = {points.begin()+points.size()/2, points.end()};
       int num_left = points.size()/2;
       int num_right = points.end() - points.begin() - points.size()/2;
- // split if size if greater than 1.
       if (num_left > 1) {
          left = make_shared<TreeNode<T>>(left_points, 0/*FIXME: */);
       }
-      else {//only 1 point create a leaf node to store the point
+      else {
          left = make_shared<LeafNode<T>>(left_points[0]); // FIXME
       }
 
@@ -142,12 +145,11 @@ TreeNode<T>::TreeNode(vector<Point<T>>& points, int cur_depth, int build_method)
    
 }
 
+// Constructor to build the tree. 
 template <typename T>
-TreeNode<T>::TreeNode(vector<Point<T>>& points, int cur_depth/*, int build_method*/) {
+TreeNode<T>::TreeNode(vector<Point<T>>& points, int cur_depth) {
    if (points.size() > 1) {
-      //if (build_method == 1) split_dimension = 1;
       split_dimension = getSplit(points);
- //cout << split_dimension << endl;
       int cur_split = split_dimension;
       nth_element(begin(points), begin(points) + points.size() / 2, end(points),
 		[cur_split](const Point<T>& left, const Point<T>& right) {
@@ -157,8 +159,6 @@ TreeNode<T>::TreeNode(vector<Point<T>>& points, int cur_depth/*, int build_metho
       auto split_pt = points[points.size() / 2];
       split_point = split_pt[split_dimension];
 
- //auto left = vector<Point<T>>(begin(points), begin(points) + points.size() / 2);
- //auto right = vector<Point<T>>(begin(points) + points.size() / 2, end(points));
       vector<Point<T> > left_points = {points.begin(), points.begin() + points.size()/2};
       vector<Point<T> > right_points = {points.begin()+points.size()/2, points.end()};
       int num_left = points.size()/2;
@@ -181,31 +181,7 @@ TreeNode<T>::TreeNode(vector<Point<T>>& points, int cur_depth/*, int build_metho
    }
 }
 
-template<typename T>
-bool TreeNode<T>::findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor) {
-   bool found = false;
-   shared_ptr<Node<T> > ignored_branch;
-   //cout << "searching around " << split_point << endl; 
-   if (input_point[split_dimension] < split_point) {
-      ignored_branch = right;
-      left->findNearestNeighbor(input_point, nearest_distance, nearest_neighbor);
-   } else {
-      ignored_branch = left;
-      right->findNearestNeighbor(input_point, nearest_distance, nearest_neighbor);
-   }
-   if (fabs(input_point[split_dimension] - split_point) < nearest_distance) {
-      ignored_branch->findNearestNeighbor(input_point, nearest_distance, nearest_neighbor); 
-   }
-   return found;
-}
-/*
-//template<typename T>
-bool TreeNode<T>::searchNode(const Point<T>& points) const {
-   return true;
-}
-*/
-//template<typename T> 
-
+// Function to find the hyperplace along which this TreeNode will cut. 
 template<typename T>
 int TreeNode<T>::getSplit(vector<Point<T> >& points) {
    if (points.size() == 0) {
@@ -227,11 +203,32 @@ int TreeNode<T>::getSplit(vector<Point<T> >& points) {
          maxDiff = (maxElement-minElement);
          splitIndex = i;
       }
-      //cout << maxElement << " " << minElement << endl;
    }
    return splitIndex;
 }
 
+// Function to find nearest neighbor of input_point. 
+// Returns nearest distance and index of the neighbor. 
+template<typename T>
+bool TreeNode<T>::findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor) {
+   bool found = false;
+   shared_ptr<Node<T> > ignored_branch;
+   //cout << "searching around " << split_point << endl; 
+   if (input_point[split_dimension] < split_point) {
+      ignored_branch = right;
+      left->findNearestNeighbor(input_point, nearest_distance, nearest_neighbor);
+   } else {
+      ignored_branch = left;
+      right->findNearestNeighbor(input_point, nearest_distance, nearest_neighbor);
+   }
+   if (fabs(input_point[split_dimension] - split_point) < nearest_distance) {
+      ignored_branch->findNearestNeighbor(input_point, nearest_distance, nearest_neighbor); 
+   }
+   return found;
+}
+
+// Function to find nearest neighbor. 
+// It simply finds the distance from this point. 
 template<typename T>
 bool LeafNode<T>::findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor) {
    bool found = false;
@@ -243,6 +240,7 @@ bool LeafNode<T>::findNearestNeighbor(const Point<T> &input_point, T& nearest_di
    return found;
 }
 
+// Function in base class which is over-written by derived classes. 
 template<typename T>
 bool Node<T>::findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor) {
    return false;

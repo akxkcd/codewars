@@ -8,10 +8,16 @@ int main(int argc, char *argv[]) {
    vector<Point<float> > query_points;
  
    KDTree<float> saved_kdtree;
-   if (argc > 1) {
-      saved_kdtree.read_kdtree(string(argv[1]));
-   } else { 
-      saved_kdtree.read_kdtree("savetree.csv");
+   try {
+      if (argc > 1) {
+         saved_kdtree.read_kdtree(string(argv[1]));
+      } else { 
+         saved_kdtree.read_kdtree("savetree.csv");
+      }
+   } 
+   catch(int n) {
+      cout << "Error: could not open file" << endl;
+      exit(0);
    }
    try {
       if (argc > 2) {
