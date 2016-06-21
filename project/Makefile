@@ -41,5 +41,5 @@ clear:
 	rm *.o
 
 clean:
-	rm *.o *.gcov *.gcno *.gcda build_kdtree query_kdtree
+	rm -rf *.dSYM *.o *.gcov *.gcno *.gcda build_kdtree query_kdtree
 	rm -rf *.dSYM

@@ -1,5 +1,4 @@
 #include "Helper.h"
-#include "Tester.h"
 #include "KDTree.h"
 using namespace std;
 
