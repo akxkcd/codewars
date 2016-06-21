@@ -3,9 +3,13 @@
 #include <memory>
 #include <fstream>
 #include <sstream>
-#include "Node.h"
 #include <deque>
+#include "Node.h"
 
+
+// KDTree class. 
+// contains the root of the tree. 
+// APIs to build_kdtree, query kdtree, save kdtree and read kdtree. 
 template<typename T=float>
 class KDTree {
 private:
@@ -19,20 +23,17 @@ public:
    // destructor
    ~KDTree() = default; 
 
+   // static APIs to allow use of this class without instatiation. 
    static void build_kdtree(const string& inputFileName);
    static KDTree build_kdtree(vector<Point<T> > &points);
    static KDTree make_kdtree(vector<Point<T> > &points);
-   static void query_kdtree(const string& inputFileName, const string& outputFileName);
+   // APIs to read, save and query. 
    void query_kdtree(vector<Point<T> > &cur_points, string outputFileName); 
    void query_kdtree(Point<T> &cur_point);
    void query_kdtree(vector<Point<T> >  &cur_points);
    void query_kdtree(Point<T> &cur_point, T& nearest_distance, int &nearest_neighbor);
    void save_kdtree(const string& outputFileName);
    void read_kdtree(const string& inputFileName);
-//   void build_kdtree(vector<Point<T> > &points);
-/* {
-      return ;
-   }*/
 };
 
 template<typename T>
@@ -44,9 +45,6 @@ KDTree<T> KDTree<T>::make_kdtree(vector<Point<T> > &points)
    if (points.size() == 0) {
       return KDTree(nullptr);
    } else {
-      //TreeNode<T> cur_node(points,0);
-      //return KDTree(cur_node);
-      //return KDTree(make_shared<TreeNode<T> >(points,0));
       return KDTree(make_shared<TreeNode<T> >(points,0,0));
    }
 }
@@ -56,7 +54,6 @@ void KDTree<T>::query_kdtree(Point<T> &cur_point) {
    T nearest_distance = numeric_limits<T>::max();
    int nearest_neighbor;
    query_kdtree(cur_point, nearest_distance, nearest_neighbor);
-   //cout << nearest_neighbor << " " << nearest_distance << endl;
 }
 
 template<typename T>
@@ -89,6 +86,7 @@ void KDTree<T>::query_kdtree(vector<Point<T> >  &cur_points) {
    }
 }
 
+// This function reads the kdtree from inputFileName
 template<typename T>
 void KDTree<T>::read_kdtree(const string& inputFileName) {
    ifstream in_file(inputFileName);
@@ -161,6 +159,7 @@ void KDTree<T>::read_kdtree(const string& inputFileName) {
    }
 }
 
+// This functions saves generated kdtree to custom location. 
 template<typename T>
 void KDTree<T>::save_kdtree(const string& outputFileName) {
    

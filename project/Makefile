@@ -1,10 +1,10 @@
 CC = g++
-#COV = -fprofile-arcs -ftest-coverage
+COV = -fprofile-arcs -ftest-coverage
 DEBUG = -g
-CFLAGS = -Wall  -std=c++11 -c $(DEBUG) -I. -lm
-LFLAGS = -Wall -std=c++11 $(DEBUG) 
+CFLAGS = -Wall  -std=c++11 -c -I. -lm
+LFLAGS = -Wall -std=c++11 
 OBJ = Helper.o Node.o KDTree.o 
-all: compile run
+all: run3
 
 point.o:
 	$(CC) $(CFLAGS) -c Helper.h
@@ -29,11 +29,11 @@ run1:
 
 run2: build_kdtree query_kdtree
 	./build_kdtree sample_data.csv
-	./query_kdtree savetree.csv query_data.csv
+	./query_kdtree query_data.csv savetree.csv 
 
 run3: build_kdtree query_kdtree
 	./build_kdtree sample_data_orig.csv out_tree.csv
-	./query_kdtree out_tree.csv query_data.csv out_result.csv
+	./query_kdtree query_data.csv out_tree.csv out_result.csv
 
 valgrind:
 	valgrind --leak-check=yes ./a.out data/sample_data_orig.csv data/query_data.csv 
@@ -41,4 +41,5 @@ clear:
 	rm *.o
 
 clean:
-	rm *.o *.gcov *.gcno *.gcda
+	rm *.o *.gcov *.gcno *.gcda build_kdtree query_kdtree
+	rm -rf *.dSYM
