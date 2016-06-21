@@ -32,7 +32,11 @@ public:
    T& operator[](const size_t index);
    const T& operator[](const size_t index) const;
    vector<T> getDimensionVector() const;
-   size_t getIndex() const;
+   int getIndex() const;
+   void setIndex(int index) 
+   {
+      point_index=index;
+   }
    T getDistance(const Point<T>& neighbor) const;
    void showPoint() const;
 };
@@ -61,7 +65,8 @@ vector<T> Point<T>::getDimensionVector() const{
 }
 
 template<typename T>
-size_t Point<T>::getIndex() const{
+int Point<T>::getIndex() const{
+   //cout << point_index << endl;
    return point_index;
 }
 
@@ -93,7 +98,8 @@ public:
       vector<Point<T> > points;
       if (!in_file.good()) {
          cout << "could not open file in readCSV " << file_name << endl;
-         throw "file could not open";
+         throw 1;
+         //throw "file could not open";
       }
       vector<T> in_points;
       string cur_line;

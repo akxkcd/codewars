@@ -21,11 +21,25 @@ point.o:
 compile: $(OBJ)
 	$(CC) $(LFLAGS) $^  main.cpp
 
+build_kdtree: $(OBJ)
+	$(CC) $(LFLAGS) $^  build_kdtree.cpp -o build_kdtree
+
+query_kdtree: $(OBJ)
+	$(CC) $(LFLAGS) $^  query_kdtree.cpp -o query_kdtree
+
 run: 
 	./a.out
 
 run1:
 	./a.out data/sample_data_orig.csv data/query_data.csv
+
+run2: build_kdtree query_kdtree
+	./build_kdtree sample_data.csv
+	./query_kdtree savetree.csv query_data.csv
+
+run3: build_kdtree query_kdtree
+	./build_kdtree sample_data_orig.csv out_tree.csv
+	./query_kdtree out_tree.csv query_data.csv out_result.csv
 
 valgrind:
 	valgrind --leak-check=yes ./a.out data/sample_data_orig.csv data/query_data.csv 

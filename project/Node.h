@@ -31,6 +31,7 @@ public:
    virtual T get_split_point() const {return 0;}
    virtual int get_split_dimension() const {return -1;}
    virtual Point<T> getPoint() {return Point<T>{};}
+   virtual void setIndex(int index) {};
    virtual bool findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor);
 };
 
@@ -47,6 +48,7 @@ public:
    // Destructor
    ~LeafNode() = default;
    virtual bool findNearestNeighbor(const Point<T> &input_point, T& nearest_distance, int& nearest_neighbor);
+   virtual void setIndex(int index) {point.setIndex(index);};
    virtual int getType() const
    {
       return LEAF;
