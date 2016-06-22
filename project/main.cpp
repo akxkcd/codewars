@@ -10,16 +10,14 @@ int main(int argc, char *argv[]) {
 	
    vector<Point<float> > points;
    vector<Point<float> > query_points;
-   cout << argc << endl;
    if (argc > 1) {
-      cout << argv[0] << " " << argv[1] << endl;
       points = IO_Points<float>::readCSV(string(argv[1]));
    }else { 
       points = IO_Points<float>::readCSV("data/sample_data.csv");
    }
    auto kdtree = KDTree<float>::make_kdtree(points);  
    kdtree.save_kdtree("savetree.csv"); 
-   KDTree<float> saved_kdtree;// = new KDTree<float>;
+   KDTree<float> saved_kdtree;
    saved_kdtree.read_kdtree("savetree.csv");
    saved_kdtree.save_kdtree("newtree.csv");
    if (argc > 2) {
@@ -27,8 +25,8 @@ int main(int argc, char *argv[]) {
    } else {
       query_points = IO_Points<float>::readCSV("data/query_data.csv");
    } 
-   //kdtree.query_kdtree(query_points[0]);  
-   kdtree.query_kdtree(query_points); 
+   kdtree.query_kdtree(query_points);
+   // This API tests the output of kdtree against brute force solution.  
    Tester<float>::test_kdtree(kdtree, points, query_points);
    points.clear();
    query_points.clear(); 

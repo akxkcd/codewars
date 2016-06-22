@@ -2,6 +2,9 @@
 #include "KDTree.h"
 using namespace std;
 
+// This is used to build_kdtree
+// expected use:
+// ./build_kdtree <sample_data.csv> <output_tree.csv>
 int main(int argc, char *argv[]) {
 	
    vector<Point<float> > points;

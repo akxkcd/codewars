@@ -112,8 +112,17 @@ public:
 // constructor to build the tree. 
 template <typename T>
 TreeNode<T>::TreeNode(vector<Point<T>>& points, int cur_depth, int build_method) {
-   if (points.size() > 1) {
-      split_dimension = getSplit(points);
+   if (points.size() > 0) {
+      int total_dimension = points[0].getDimensionVector().size();
+      if (build_method == 0) {
+         // This is the default split style by using median of maximum spread
+         split_dimension = getSplit(points);
+      } else {
+         // Example of how to implement different methods. 
+         // Split hyper-plane is rotated from 0-1-2...-n-0-1 etc. 
+         split_dimension = cur_depth%total_dimension;
+         split_dimension++;
+      }
       int cur_split = split_dimension;
       nth_element(begin(points), begin(points) + points.size() / 2, end(points),
 		[cur_split](const Point<T>& left, const Point<T>& right) {
@@ -128,24 +137,25 @@ TreeNode<T>::TreeNode(vector<Point<T>>& points, int cur_depth, int build_method)
       int num_left = points.size()/2;
       int num_right = points.end() - points.begin() - points.size()/2;
       if (num_left > 1) {
-         left = make_shared<TreeNode<T>>(left_points, 0/*FIXME: */);
+         left = make_shared<TreeNode<T>>(left_points, cur_depth);
       }
       else {
-         left = make_shared<LeafNode<T>>(left_points[0]); // FIXME
+         left = make_shared<LeafNode<T>>(left_points[0]);
       }
 
  // split if num_right is greater than one
       if (num_right > 1){
-         right = make_shared<TreeNode<T>>(right_points, 0/*FIXME*/);            
+         right = make_shared<TreeNode<T>>(right_points, cur_depth);            
       }
       else {
-         right = make_shared<LeafNode<T>>(right_points[0]); // FIXME
+         right = make_shared<LeafNode<T>>(right_points[0]);
       }
    }
    
 }
 
-// Constructor to build the tree. 
+// Constructor to build the tree.
+// This function is only to demonstrate new implementations of tree creation algorithm.  
 template <typename T>
 TreeNode<T>::TreeNode(vector<Point<T>>& points, int cur_depth) {
    if (points.size() > 1) {
@@ -165,18 +175,18 @@ TreeNode<T>::TreeNode(vector<Point<T>>& points, int cur_depth) {
       int num_right = points.end() - points.begin() - points.size()/2;
  // split if size if greater than 1.
       if (num_left > 1) {
-         left = make_shared<TreeNode<T>>(left_points, 0/*FIXME: */);
+         left = make_shared<TreeNode<T>>(left_points, cur_depth);
       }
       else {//only 1 point create a leaf node to store the point
-         left = make_shared<LeafNode<T>>(left_points[0]); // FIXME
+         left = make_shared<LeafNode<T>>(left_points[0]);
       }
 
  // split if num_right is greater than one
       if (num_right > 1){
-         right = make_shared<TreeNode<T>>(right_points, 0/*FIXME*/);            
+         right = make_shared<TreeNode<T>>(right_points, cur_depth);            
       }
       else {
-         right = make_shared<LeafNode<T>>(right_points[0]); // FIXME
+         right = make_shared<LeafNode<T>>(right_points[0]);
       }
    }
 }

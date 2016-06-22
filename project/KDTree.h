@@ -39,6 +39,7 @@ public:
 template<typename T>
 KDTree<T>::KDTree(shared_ptr<Node<T>> cur_node):root(cur_node) {}
 
+// Calls constructor of TreeNode to create the tree. 
 template<typename T>
 KDTree<T> KDTree<T>::make_kdtree(vector<Point<T> > &points)
 {

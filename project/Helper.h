@@ -7,13 +7,12 @@
 #include <string>
 #include <sstream>
 #include <ios>
-//#include <utility>
 #include <iostream>
 #include <math.h>
 #include <fstream>
 
 using namespace std;
-
+// Based class to contain each point given as an input. 
 template <typename T = float>
 class Point{
    vector<T> dimension;
@@ -66,7 +65,6 @@ vector<T> Point<T>::getDimensionVector() const{
 
 template<typename T>
 int Point<T>::getIndex() const{
-   //cout << point_index << endl;
    return point_index;
 }
 
@@ -88,6 +86,9 @@ T Point<T>::getDistance(const Point<T>& neighbor) const{
    return cur_distance;
 }
 
+// Class to handle IO. Specifically to read the input file used to generate the tree.
+// This class has a static function readCSV to read the file. 
+// This allows using this class without creating an object.  
 template <typename T = float>
 class IO_Points {
    IO_Points() = default;

@@ -2,6 +2,9 @@
 #include "KDTree.h"
 using namespace std;
 
+// This is used to create query_kdtree
+// To run query_kdtree:
+// ./query_kdtree <query_data.csv> <tree_from_previous_step.csv> <output_result.csv> 
 int main(int argc, char *argv[]) {
 	
    vector<Point<float> > query_points;
@@ -31,10 +34,10 @@ int main(int argc, char *argv[]) {
    }
    try {
       if (argc > 3) {
-         cout << "result will be present in:" << string(argv[3]) << endl;
+         cout << "result will be present in: " << string(argv[3]) << endl;
          saved_kdtree.query_kdtree(query_points, string(argv[3])); 
       } else {
-         cout << "result will be present in:" << "result.csv" << endl;
+         cout << "result will be present in: " << "result.csv" << endl;
          saved_kdtree.query_kdtree(query_points, "result.csv"); 
       }
    } 
