@@ -44,8 +44,16 @@ run4: build_kdtree query_kdtree
 	./build_kdtree sample_set.csv out_tree.csv
 	./query_kdtree query_set.csv out_tree.csv out_result.csv
 
-run1:
+run5:
 	./a.out data/sample_data_orig.csv data/query_data.csv
+
+run6:
+	./a.out sample_set.csv query_set.csv
+
+#To time the result
+run7: build_kdtree query_kdtree
+	time ./build_kdtree sample_set.csv out_tree.csv
+	time ./query_kdtree query_set.csv out_tree.csv out_result.csv
 
 
 #To run valgrind
