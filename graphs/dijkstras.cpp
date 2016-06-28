@@ -1,4 +1,5 @@
 
+/*
 int findRoute(std::vector<std::vector<int>> &city, int index) {
     using namespace std;
     if (index == city.size()-1) return 1000000;
@@ -7,7 +8,7 @@ int findRoute(std::vector<std::vector<int>> &city, int index) {
     int nextFind = city[index][index+1] + findRoute(city, index+1);
     cout << nextFind << endl;
     return min(city[index][n-1], nextFind);
-}
+}*/
 int minDistance(std::vector<int> & distance, std::vector<bool> & spanningTree) {
     using namespace std;
     int minimum = INT_MAX;
