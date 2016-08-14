@@ -3,7 +3,9 @@
 #include <string>
 
 using namespace std;
-
+/*
+Given a list of word and a target word, output all the words for each the edit distance with the target no greater than k.
+*/
 class TrieNode {
    public:
    bool isLeaf;
